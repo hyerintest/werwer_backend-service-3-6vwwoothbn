@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: backend-service-3-6vwwoothbn
+    version: v1
+    desc: backend-service-3-6vwwoothbn RESTful API Service
+  mvc:
+    throw-exception-if-no-handler-found: true
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+  redis:
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:password}
+    
+server:
+  port: 8080
+  forward-headers-strategy: framework
+service-path: ${SERVICE_PATH:}
+springdoc:
+  cache:
+    disabled: true
+  version: 1
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+    resolve-schema-properties: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    show-extensions: true
+    layout: BaseLayout
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    url: ${SERVICE_PATH:}/v3/api-docs
+    config-url: ${SERVICE_PATH:}/v3/api-docs/swagger-config
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    show-common-extensions: true
+  show-actuator: true
+  show-login-endpoint: true
+logging:
+  config: classpath:log4j2-spring.yml
+  level:
+    org.springframework.web.servlet.PageNotFound: 'OFF'
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
