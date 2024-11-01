@@ -1,3 +1,11 @@
+pipeline {
+    agent any
+    
+    tools {
+        jdk 'JDK8'
+    }
+}
+
 podTemplate(
     containers: [
         containerTemplate(name: 'helm-kubectl', image: 'registry.turacocloud.com/turaco-common/helm-kubectl:latest', command: 'cat', ttyEnabled: true),
@@ -10,7 +18,6 @@ podTemplate(
                 git (branch: "$BRANCH", url: "https://$SOURCE_REPO_URL/${GROUP_NAME}_${SERVICE_NAME}.git", credentialsId: "$CREDENTIAL_ID")
                 echo "SonarQube analysis..."
                 sh "chmod +x ./gradlew"
-                // JAVA_HOME을 Java 1.8로 설정
                 sh "./gradlew clean build jib -PdockerRegistry=$IMAGE_REPO_NAME -PdockerUser=$HARBOR_USER -PdockerPassword=$HARBOR_PASSWORD -PserviceName=$ARGO_APPLICATION -PcommitRev=$COMMIT_ID"
                 sh "sleep 60"
                 sh "curl -u $SONAR_ID:$SONAR_PWD $SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY >result.json"
