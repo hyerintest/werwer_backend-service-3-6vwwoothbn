@@ -1,8 +1,7 @@
 podTemplate(
     containers: [
         ate(name: 'helm-kubectl', image: 'registry.turacocloud.com/turaco-common/helm-kubectl:latest', command: 'cat', ttyEnabled: true),
-        containerTemplate(name: 'argocd', image: 'registry.turacocloud.com/turaco-common/argocd:latest', command: 'cat', ttyEnabled: true),
-         containerTemplate(name: 'gradle', image: 'gradle:7.1-jdk8', command: 'cat', ttyEnabled: true), // Gradle과 Java 1.8 이미지를 사용
+        containerTemplate(name: 'argocd', image: 'registry.turacocloud.com/turaco-common/argocd:latest', command: 'cat', ttyEnabled: true)
     ],
     imagePullSecrets: ['harbor-secret']) {
     node(POD_LABEL) {
