@@ -11,10 +11,7 @@ podTemplate(
                 echo "SonarQube analysis..."
                 sh "chmod +x ./gradlew"
                 // JAVA_HOME을 Java 1.8로 설정
-                sh '''
-                    export JAVA_HOME=/path/to/java8
-                    ./gradlew clean build jib -PdockerRegistry=$IMAGE_REPO_NAME -PdockerUser=$HARBOR_USER -PdockerPassword=$HARBOR_PASSWORD -PserviceName=$ARGO_APPLICATION -PcommitRev=$COMMIT_ID
-                '''
+                sh "./gradlew clean build jib -PdockerRegistry=$IMAGE_REPO_NAME -PdockerUser=$HARBOR_USER -PdockerPassword=$HARBOR_PASSWORD -PserviceName=$ARGO_APPLICATION -PcommitRev=$COMMIT_ID"
                 sh "sleep 60"
                 sh "curl -u $SONAR_ID:$SONAR_PWD $SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY >result.json"
                 def QAULITY_GATES = readJSON(file: 'result.json').projectStatus.status
