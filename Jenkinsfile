@@ -1,7 +1,7 @@
 podTemplate(
     containers: [
         containerTemplate(name: 'helm-kubectl', image: 'registry.turacocloud.com/turaco-common/helm-kubectl:latest', command: 'cat', ttyEnabled: true),
-        containerTemplate(name: 'argocd', image: 'registry.turacocloud.com/turaco-common/argocd:latest', command: 'cat', ttyEnabled: true),
+         containerTemplate(name: 'gradle', image: 'gradle:7.1-jdk8', command: 'cat', ttyEnabled: true), // Gradle과 Java 1.8 이미지를 사용
     ],
     imagePullSecrets: ['harbor-secret']) {
     node(POD_LABEL) {
@@ -10,7 +10,7 @@ podTemplate(
                 git (branch: "$BRANCH", url: "https://$SOURCE_REPO_URL/${GROUP_NAME}_${SERVICE_NAME}.git", credentialsId: "$CREDENTIAL_ID")
                 echo "SonarQube analysis..."
                 sh "chmod +x ./gradlew"
-                sh "./gradlew sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.projectKey=$PROJECT_KEY -Dsonar.projectName=$PROJECT_KEY -Dsonar.token=$SONAR_TOKEN"
+                sh "export JAVA_HOME=/path/to/java8 && ./gradlew sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.projectKey=$PROJECT_KEY -Dsonar.projectName=$PROJECT_KEY -Dsonar.token=$SONAR_TOKEN"
                 sh "sleep 60"
                 sh "curl -u $SONAR_ID:$SONAR_PWD $SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY >result.json"
                 def QAULITY_GATES = readJSON(file: 'result.json').projectStatus.status
